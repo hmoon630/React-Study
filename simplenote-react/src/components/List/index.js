@@ -8,14 +8,14 @@ class List extends React.Component {
         return (
             <div className="list">
                 {notes.map((item) => {
-                    const { id, title, contents } = item;
+                    const { id, title, content } = item;
                     return (
                         <ListItem
                             key={id}
                             id={id}
                             active={id ===activeId}
                             title={title}
-                            contents={contents}
+                            content={content}
                             onClick={() => onListItemClick(id)}
                         />
                     );

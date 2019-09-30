@@ -4,7 +4,7 @@ import './index.css';
 class Note extends React.Component {
     render () {
         const { note, onEditNote } = this.props;
-        const { title, contents } = note;
+        const { title, content } = note;
         return (
             <div className="note">
                 <input
@@ -14,7 +14,7 @@ class Note extends React.Component {
                 />
                 <textarea
                     className="note-contents"
-                    value={contents}
+                    value={content}
                     onChange={(e) => onEditNote('contents', e)}
                 />
             </div>

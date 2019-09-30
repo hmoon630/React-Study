@@ -8,24 +8,21 @@ import nextId from 'react-id-generator';
 class App extends React.Component {
     
     state = {
-        notes: [
-            {
-                id: '_firstnote',
-                title: '제목1',
-                contents: '내용1',
-            },
-            {
-                id: '_secondnote',
-                title: '제목2',
-                contents: '내용2',
-            },
-            {
-                id: '_thirdnote',
-                title: '제목3',
-                contents: '내용3',
-            },
-        ],
-        activeId: '_secondnote',
+        notes: [],
+        activeId: null,
+    }
+
+    async componentDidMount() {
+        try {
+            const res = await fetch('http://127.0.0.1:8000/api/');
+            const notes = await res.json();
+            this.setState({
+                notes,
+                activeId:notes[0].id
+            });
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     handleListItemClick = (id) => {
