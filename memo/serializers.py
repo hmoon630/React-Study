@@ -7,5 +7,7 @@ class MemoSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'content',
+            'created_at',
         )
         model = Memo
+    
