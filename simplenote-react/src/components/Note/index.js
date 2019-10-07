@@ -15,7 +15,7 @@ class Note extends React.Component {
                 <textarea
                     className="note-contents"
                     value={content}
-                    onChange={(e) => onEditNote('contents', e)}
+                    onChange={(e) => onEditNote('content', e)}
                 />
             </div>
         );
