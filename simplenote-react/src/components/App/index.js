@@ -3,7 +3,7 @@ import './index.css';
 import Header from '../Header';
 import List from '../List';
 import Note from '../Note';
-import nextId from 'react-id-generator';
+import axios from 'axios';
 
 class App extends React.Component {
     
@@ -12,10 +12,10 @@ class App extends React.Component {
         activeId: null,
     }
 
-    async componentDidMount() {
+    componentDidMount = async () => {
         try {
-            const res = await fetch('http://127.0.0.1:8000/api/');
-            const notes = await res.json();
+            const req = await axios.get("http://127.0.0.1:8000/api/");
+            const notes = await req.data;
             this.setState({
                 notes,
                 activeId:notes[0].id
@@ -23,6 +23,8 @@ class App extends React.Component {
         } catch (e) {
             console.log(e);
         }
+
+        
     }
 
     handleListItemClick = (id) => {
@@ -43,16 +45,25 @@ class App extends React.Component {
     }
 
     handleAddNote = () => {       
-        const id = nextId();
-        
+        const id = '_' + Math.random().toString(36).substr(2, 9);
+        let note = {
+            id,
+            title: 'Title',
+            content: 'Text',
+        }
+
+        try {
+            const req = axios.post(`http://127.0.0.1:8000/api/add/${id}`,
+                note
+            );
+        } catch (e) {
+            console.log(e);
+        }
+
         this.setState({
             notes: [
                 ...this.state.notes,
-                {
-                    id,
-                    title: '제목',
-                    contents : '내용',
-                },
+                note,
             ],
             activeId: id,
         });
@@ -61,10 +72,31 @@ class App extends React.Component {
     handleDeleteNote = () => {
         const notes = 
             this.state.notes.filter((item) => item.id !== this.state.activeId);
+
+        try {
+            const req = axios.delete(`http://127.0.0.1:8000/api/delete/${this.state.activeId}`);
+        } catch (e) {
+            console.log(e);
+        }
+
         this.setState({
             notes,
             activeId: notes.length === 0 ? null : notes[0].id,
         });
+    }
+
+    handleSaveNote = () => {
+        const note =
+            this.state.notes.filter((item) => item.id === this.state.activeId)[0];
+        
+        try {
+            const req = axios.put(`http://127.0.0.1:8000/api/save/${note.id}`,
+                note
+            );
+        } catch (e) {
+            console.log(e);
+        }
+
     }
 
     render () {
@@ -75,6 +107,7 @@ class App extends React.Component {
                 <Header
                     onAddNote={this.handleAddNote}
                     onDeleteNote={this.handleDeleteNote}
+                    onSaveNote={this.handleSaveNote}
                 />
                 <div className="container">
                     <List
